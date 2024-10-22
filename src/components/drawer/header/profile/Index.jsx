@@ -2,11 +2,11 @@ import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import { alpha, styled } from "@mui/material/styles";
 import * as React from "react";
-import { ReactComponent as DropdownArrow } from "../../../assets/icons/dropdownArrow.svg";
-import { ReactComponent as ProfileIcon } from "../../../assets/icons/profileIcon.svg";
-import { ReactComponent as SettingIcon } from "../../../assets/icons/settingIcon.svg";
-import { ReactComponent as SignOutIcon } from "../../../assets/icons/signOutIcon.svg";
-import ProfilePic from "../../../assets/images/profilePic.png";
+import { ReactComponent as DropdownArrow } from "../../../../assets/icons/dropdownArrow.svg";
+import { ReactComponent as ProfileIcon } from "../../../../assets/icons/profileIcon.svg";
+import { ReactComponent as SettingIcon } from "../../../../assets/icons/settingIcon.svg";
+import { ReactComponent as SignOutIcon } from "../../../../assets/icons/signOutIcon.svg";
+import ProfilePic from "../../../../assets/images/profilePic.png";
 
 const StyledMenu = styled((props) => (
   <Menu
@@ -73,14 +73,16 @@ export default function Profile() {
         onClick={handleClick}
         className="cursor-pointer"
       >
-        <div class="flex items-center gap-4">
+        <div class="flex items-center gap-4 max-sm:justify-end">
           <img class="w-[50px] h-[50px] rounded-full" src={ProfilePic} alt="" />
-          <div class="font-medium" style={{ lineHeight: "20px" }}>
-            <p className="text-[#D8942E] font-medium">Anthony Jenkins</p>
-            <p class="text-sm text-[#17263A] text-left">Super Admin</p>
+          <div class="font-medium max-sm:hidden" style={{ lineHeight: "20px" }}>
+            <p className="text-[#D8942E] font-medium ">Anthony Jenkins</p>
+            <p class="text-sm text-[#17263A] text-left  ">Super Admin</p>
           </div>
 
-          <DropdownArrow width={"15"} />
+          <div className="max-sm:hidden">
+            <DropdownArrow width={"15"} />
+          </div>
         </div>
       </div>
       <StyledMenu

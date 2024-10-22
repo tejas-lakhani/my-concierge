@@ -15,6 +15,9 @@ function App() {
     setIsAuthenticated(false);
   };
 
+  console.log("gg");
+  
+
   return (
     <div className="App">
       <Router>

@@ -15,7 +15,7 @@ function App() {
     setIsAuthenticated(false);
   };
 
-  console.log("gg");
+  // console.log("gg");
   
 
   return (

@@ -1,8 +1,7 @@
 import { useState } from 'react';
-import { Route, BrowserRouter as Router, Routes } from 'react-router-dom';
 import './App.css';
-import Login from './pages/auth/login/Login';
-import Dashboard from './pages/dashboard/Dashboard';
+import AppRoute from './routes';
+
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -20,12 +19,7 @@ function App() {
 
   return (
     <div className="App">
-      <Router>
-        <Routes>
-          <Route path="/login" element={<Login />} />
-          <Route path="/dashboard" element={<Dashboard />} />
-        </Routes>
-      </Router>
+       <AppRoute/>
     </div>
   );
 }

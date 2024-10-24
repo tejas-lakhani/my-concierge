@@ -11,8 +11,10 @@ import { Box, Button } from "@mui/material";
 import profileImage from "../../assets/icons/profileImage.svg";
 import useWindowWidth from "../../customHooks/useWindowWidth";
 import TableLayoutBox from "../../components/common/TableLayoutBox";
+import { useNavigate } from "react-router-dom";
 
 const Category = () => {
+  const navigate = useNavigate();
   const windowWidth = useWindowWidth();
   const [entries, setEntries] = useState(10);
   const [searchTerm, setSearchTerm] = useState("");
@@ -61,6 +63,7 @@ const Category = () => {
               borderRadius: "25px",
               fontSize: { xs: "12px", sm: "13px" },
             }}
+            onClick={() => navigate("/create-category")}
           >
             Add New Category
           </Button>

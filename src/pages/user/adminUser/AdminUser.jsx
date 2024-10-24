@@ -51,49 +51,6 @@ const AdminUser = () => {
             <div className="flex justify-between items-center mb-4">
                 <h1 className="text-2xl font-semibold">Admin User List</h1>
             </div>
-            <Button
-                id="demo-positioned-button"
-                aria-controls={open ? 'demo-positioned-menu' : undefined}
-                aria-haspopup="true"
-                aria-expanded={open ? 'true' : undefined}
-                onClick={handleClick}
-                style={{background:"#666666"}}
-                className="flex items-center justify-between text-sm font-medium bg-[#666666] text-gray-800"
-            >
-                <span className="text-white">All category</span>
-                <ExpandMoreIcon className="text-white" />
-            </Button>
-            <Menu
-                id="demo-positioned-menu"
-                aria-labelledby="demo-positioned-button"
-                anchorEl={anchorEl}
-                open={open}
-
-                onClose={handleClose}
-                anchorOrigin={{
-                    vertical: 'bottom',
-                    horizontal: 'left',
-                }}
-                transformOrigin={{
-                    vertical: 'top',
-                    horizontal: 'left',
-                }}
-            >
-                <MenuList>
-                    <MenuItem onClick={handleClose}>
-                        <div className="text-gray-800">Lorem ipsum</div>
-                    </MenuItem>
-                    <MenuItem onClick={handleClose}>
-                        <div className="text-gray-800">Lorem ipsum</div>
-                    </MenuItem>
-                    <MenuItem onClick={handleClose}>
-                        <div className="text-gray-800">Lorem ipsum</div>
-                    </MenuItem>
-                    <MenuItem onClick={handleClose}>
-                        <div className="text-gray-800">Lorem ipsum</div>
-                    </MenuItem>
-                </MenuList>
-            </Menu>
             <div className="flex justify-between md:items-center mb-4 max-md:flex-col">
                 <div className="flex items-center space-x-2 max-md:mb-4">
                     <span className="text-gray-700">Show</span>

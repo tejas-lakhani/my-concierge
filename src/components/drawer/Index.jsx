@@ -26,10 +26,10 @@ const Main = styled("main", { shouldForwardProp: (prop) => prop !== "open" })(
     }),
     marginLeft: open ? 0 : `-${drawerWidth}px`,
 
-    [theme.breakpoints.down("sm")]: {
+    [theme.breakpoints.down("lg")]: {
       marginLeft: open ? 0 : 0,
     },
-    [theme.breakpoints.up("sm")]: {
+    [theme.breakpoints.up("lg")]: {
       marginLeft: open ? 0 : `-${drawerWidth}px`,
     },
 
@@ -48,12 +48,12 @@ const AppBar = styled(MuiAppBar, {
     duration: theme.transitions.duration.leavingScreen,
   }),
 
-  [theme.breakpoints.up("sm")]: {
+  [theme.breakpoints.up("lg")]: {
     width: open ? `calc(100% - ${drawerWidth}px)` : `100%`,
     marginLeft: open ? `${drawerWidth}px` : 0,
   },
 
-  [theme.breakpoints.down("sm")]: {
+  [theme.breakpoints.down("lg")]: {
     width: "100%",
     marginLeft: 0,
   },
@@ -69,7 +69,7 @@ export default function DrawerBox(props) {
   const [open, setOpen] = React.useState(true);
 
   // Use media query to determine if the screen width is less than 600px (mobile)
-  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+  const isMobile = useMediaQuery(theme.breakpoints.down("lg"));
 
   const handleDrawerOpen = () => {
     setOpen(!open);
@@ -133,7 +133,9 @@ export default function DrawerBox(props) {
           <SidebarList />
         </List>
       </Drawer>
-      <Main open={open}>{props.children}</Main>
+      <Main sx={{ padding: "24px 0 0" }} open={open}>
+        {props.children}
+      </Main>
     </Box>
   );
 }

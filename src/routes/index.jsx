@@ -6,6 +6,8 @@ import MainLayout from "../components/layout/MainLayout";
 import ChatPage from "../pages/chats";
 import ForgotPassword from "../pages/auth/forgotPassword/ForgotPassword";
 import ResetPassword from "../pages/auth/resetPassword/ResetPassword";
+import Category from "../pages/category/Category";
+import SubCategory from "../pages/category/subCategory/SubCategory";
 
 const AppRoute = () => {
   return (
@@ -16,6 +18,8 @@ const AppRoute = () => {
         <Route path="/resetPassword" element={<ResetPassword />} />
         <Route path="/" element={<MainLayout />}>
           <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/category" element={<Category />} />
+          <Route path="/sub-category" element={<SubCategory />} />
           <Route path="/chat" element={<ChatPage />} />
         </Route>
       </Routes>

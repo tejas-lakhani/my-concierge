@@ -5,6 +5,7 @@ import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import * as React from "react";
+import { useLocation, useNavigate } from "react-router-dom"; // Import necessary hooks
 import { ReactComponent as DropdownBottomIcon } from "../../../assets/icons/dropdownBottomIcon.svg";
 import { ReactComponent as DropdownRightIcon } from "../../../assets/icons/dropdownRightIcon.svg";
 import { ReactComponent as Category } from "../../../assets/icons/sidebarIcon/category.svg";
@@ -14,12 +15,23 @@ import { ReactComponent as Dashboard } from "../../../assets/icons/sidebarIcon/d
 import { ReactComponent as Sales } from "../../../assets/icons/sidebarIcon/sales.svg";
 import { ReactComponent as Setting } from "../../../assets/icons/sidebarIcon/setting.svg";
 import { ReactComponent as UserSetting } from "../../../assets/icons/sidebarIcon/userSetting.svg";
+import { ReactComponent as SidebarArrowIcon } from "../../../assets/icons/sidebarIcon/sidebarArrowIcon.svg";
 
 export default function SidebarList() {
   const [open, setOpen] = React.useState(null);
+  const navigate = useNavigate(); // Use navigate for programmatic navigation
+  const location = useLocation(); // Use location to get current pathname
 
   const handleClick = (item) => {
-    setOpen(open === item ? null : item);
+    setOpen(open === item ? null : item); // Only expand/collapse, no navigation
+  };
+
+  const handleNavigation = (path) => {
+    navigate(path); // Navigate when sub-items are clicked
+  };
+
+  const getTextColor = (path) => {
+    return location.pathname === path ? "#D8942E" : "inherit"; // Match current pathname to highlight
   };
 
   return (
@@ -28,14 +40,14 @@ export default function SidebarList() {
       component="nav"
       aria-labelledby="nested-list-subheader"
     >
+      {/* Dashboard */}
       <ListItemButton
         sx={{
           py: "12px",
           "&:hover": { color: "#D8942E" },
-          "&.Mui-selected": { color: "#D8942E" },
-          color: open === "dashboard" ? "#D8942E" : "inherit", // Keep color for selected
+          color: getTextColor("/dashboard"),
         }}
-        onClick={() => handleClick("dashboard")}
+        onClick={() => handleNavigation("/dashboard")} // Navigate on click
       >
         <ListItemIcon sx={{ minWidth: "42px" }}>
           <Dashboard width={"20"} color="grey" />
@@ -43,13 +55,14 @@ export default function SidebarList() {
         <ListItemText primary="Dashboard" />
       </ListItemButton>
 
+      {/* User Management */}
       <ListItemButton
         sx={{
           py: "12px",
           "&:hover": { color: "#D8942E" },
-          color: open === "user" ? "#D8942E" : "inherit",
+          color: getTextColor("/user"),
         }}
-        onClick={() => handleClick("user")}
+        onClick={() => handleClick("user")} // Expand/collapse only
       >
         <ListItemIcon sx={{ minWidth: "42px" }}>
           <UserSetting width={"20"} color="grey" />
@@ -68,8 +81,9 @@ export default function SidebarList() {
               py: "12px",
               pl: 4,
               "&:hover": { color: "#D8942E" },
-              color: open === "user" ? "#D8942E" : "inherit",
+              color: getTextColor("/user/list"),
             }}
+            onClick={() => handleNavigation("/user/list")} // Navigate to user list
           >
             <ListItemIcon sx={{ minWidth: "42px" }}>
               <StarBorder />
@@ -79,13 +93,14 @@ export default function SidebarList() {
         </List>
       </Collapse>
 
+      {/* Categories */}
       <ListItemButton
         sx={{
           py: "12px",
           "&:hover": { color: "#D8942E" },
-          color: open === "category" ? "#D8942E" : "inherit",
+          color: open === "category" ? "#D8942E" : "inherit", // Highlight when expanded
         }}
-        onClick={() => handleClick("category")}
+        onClick={() => handleClick("category")} // Expand/collapse only
       >
         <ListItemIcon sx={{ minWidth: "42px" }}>
           <Category width={"20"} color="grey" />
@@ -101,27 +116,52 @@ export default function SidebarList() {
         <List component="div" disablePadding>
           <ListItemButton
             sx={{
-              py: "12px",
-              pl: 4,
+              py: "5px",
+              pl: 5,
               "&:hover": { color: "#D8942E" },
-              color: open === "category" ? "#D8942E" : "inherit",
+              color: getTextColor("/category"),
             }}
+            onClick={() => handleNavigation("/category")} // Navigate on sub-item click
           >
-            <ListItemIcon sx={{ minWidth: "42px" }}>
-              <StarBorder />
+            <ListItemIcon sx={{ minWidth: "25px" }}>
+              <SidebarArrowIcon width={"12"} />
             </ListItemIcon>
-            <ListItemText primary="Category List" />
+            <ListItemText
+              primary="Main Category"
+              sx={{ "& .MuiTypography-body1": { fontSize: "15px" } }}
+            />
+          </ListItemButton>
+        </List>
+
+        <List component="div" disablePadding>
+          <ListItemButton
+            sx={{
+              py: "5px",
+              pl: 5,
+              "&:hover": { color: "#D8942E" },
+              color: getTextColor("/sub-category"),
+            }}
+            onClick={() => handleNavigation("/sub-category")} // Navigate on sub-item click
+          >
+            <ListItemIcon sx={{ minWidth: "25px" }}>
+              <SidebarArrowIcon width={"12"} />
+            </ListItemIcon>
+            <ListItemText
+              primary="Sub Category"
+              sx={{ "& .MuiTypography-body1": { fontSize: "15px" } }}
+            />
           </ListItemButton>
         </List>
       </Collapse>
 
+      {/* Sales */}
       <ListItemButton
         sx={{
           py: "12px",
           "&:hover": { color: "#D8942E" },
-          color: open === "sales" ? "#D8942E" : "inherit",
+          color: open === "sales" ? "#D8942E" : "inherit", // Highlight when expanded
         }}
-        onClick={() => handleClick("sales")}
+        onClick={() => handleClick("sales")} // Expand/collapse only
       >
         <ListItemIcon sx={{ minWidth: "42px" }}>
           <Sales width={"20"} color="grey" />
@@ -140,8 +180,9 @@ export default function SidebarList() {
               py: "12px",
               pl: 4,
               "&:hover": { color: "#D8942E" },
-              color: open === "sales" ? "#D8942E" : "inherit",
+              color: getTextColor("/sales/list"),
             }}
+            onClick={() => handleNavigation("/sales/list")} // Navigate on sub-item click
           >
             <ListItemIcon sx={{ minWidth: "42px" }}>
               <StarBorder />
@@ -151,28 +192,29 @@ export default function SidebarList() {
         </List>
       </Collapse>
 
+      {/* Chat */}
       <ListItemButton
         sx={{
           py: "12px",
           "&:hover": { color: "#D8942E" },
-          "&.Mui-selected": { color: "#D8942E" },
-          color: open === "chat" ? "#D8942E" : "inherit", // Keep color for selected
+          color: getTextColor("/chat"),
         }}
-        onClick={() => handleClick("chat")}
+        onClick={() => handleNavigation("/chat")} // Navigate on click
       >
         <ListItemIcon sx={{ minWidth: "42px" }}>
           <Chat width={"20"} color="grey" />
         </ListItemIcon>
-        <ListItemText primary="chat" />
+        <ListItemText primary="Chat" />
       </ListItemButton>
 
+      {/* Content */}
       <ListItemButton
         sx={{
           py: "12px",
           "&:hover": { color: "#D8942E" },
-          color: open === "content" ? "#D8942E" : "inherit",
+          color: open === "content" ? "#D8942E" : "inherit", // Highlight when expanded
         }}
-        onClick={() => handleClick("content")}
+        onClick={() => handleClick("content")} // Expand/collapse only
       >
         <ListItemIcon sx={{ minWidth: "42px" }}>
           <Content width={"20"} color="grey" />
@@ -191,8 +233,9 @@ export default function SidebarList() {
               py: "12px",
               pl: 4,
               "&:hover": { color: "#D8942E" },
-              color: open === "content" ? "#D8942E" : "inherit",
+              color: getTextColor("/content/list"),
             }}
+            onClick={() => handleNavigation("/content/list")} // Navigate on sub-item click
           >
             <ListItemIcon sx={{ minWidth: "42px" }}>
               <StarBorder />
@@ -202,13 +245,14 @@ export default function SidebarList() {
         </List>
       </Collapse>
 
+      {/* Settings */}
       <ListItemButton
         sx={{
           py: "12px",
           "&:hover": { color: "#D8942E" },
-          color: open === "settings" ? "#D8942E" : "inherit",
+          color: open === "settings" ? "#D8942E" : "inherit", // Highlight when expanded
         }}
-        onClick={() => handleClick("settings")}
+        onClick={() => handleClick("settings")} // Expand/collapse only
       >
         <ListItemIcon sx={{ minWidth: "42px" }}>
           <Setting width={"20"} color="grey" />
@@ -227,13 +271,14 @@ export default function SidebarList() {
               py: "12px",
               pl: 4,
               "&:hover": { color: "#D8942E" },
-              color: open === "settings" ? "#D8942E" : "inherit",
+              color: getTextColor("/settings/list"),
             }}
+            onClick={() => handleNavigation("/settings/list")} // Navigate on sub-item click
           >
             <ListItemIcon sx={{ minWidth: "42px" }}>
               <StarBorder />
             </ListItemIcon>
-            <ListItemText primary="General Settings" />
+            <ListItemText primary="Settings List" />
           </ListItemButton>
         </List>
       </Collapse>

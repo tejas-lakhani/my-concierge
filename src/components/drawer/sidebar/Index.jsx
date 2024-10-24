@@ -155,7 +155,7 @@ export default function SidebarList() {
       </Collapse>
 
       {/* Sales */}
-      <ListItemButton
+      {/* <ListItemButton
         sx={{
           py: "12px",
           "&:hover": { color: "#D8942E" },
@@ -172,7 +172,7 @@ export default function SidebarList() {
         ) : (
           <DropdownRightIcon color="grey" width="7" />
         )}
-      </ListItemButton>
+      </ListItemButton> */}
       <Collapse in={open === "sales"} timeout="auto" unmountOnExit>
         <List component="div" disablePadding>
           <ListItemButton
@@ -180,9 +180,9 @@ export default function SidebarList() {
               py: "12px",
               pl: 4,
               "&:hover": { color: "#D8942E" },
-              color: getTextColor("/sales/list"),
+              color: getTextColor("/sales-list"),
             }}
-            onClick={() => handleNavigation("/sales/list")} // Navigate on sub-item click
+            onClick={() => handleNavigation("/sales-list")} // Navigate on sub-item click
           >
             <ListItemIcon sx={{ minWidth: "42px" }}>
               <StarBorder />
@@ -208,7 +208,7 @@ export default function SidebarList() {
       </ListItemButton>
 
       {/* Content */}
-      <ListItemButton
+      {/* <ListItemButton
         sx={{
           py: "12px",
           "&:hover": { color: "#D8942E" },
@@ -225,7 +225,7 @@ export default function SidebarList() {
         ) : (
           <DropdownRightIcon color="grey" width="7" />
         )}
-      </ListItemButton>
+      </ListItemButton> */}
       <Collapse in={open === "content"} timeout="auto" unmountOnExit>
         <List component="div" disablePadding>
           <ListItemButton

@@ -8,6 +8,7 @@ import ForgotPassword from "../pages/auth/forgotPassword/ForgotPassword";
 import ResetPassword from "../pages/auth/resetPassword/ResetPassword";
 import Category from "../pages/category/Category";
 import SubCategory from "../pages/category/subCategory/SubCategory";
+import SaleList from "../pages/sale/SaleList";
 
 const AppRoute = () => {
   return (
@@ -21,6 +22,7 @@ const AppRoute = () => {
           <Route path="/category" element={<Category />} />
           <Route path="/sub-category" element={<SubCategory />} />
           <Route path="/chat" element={<ChatPage />} />
+          <Route path="/sales-list" element={<SaleList />} />
         </Route>
       </Routes>
     </Router>

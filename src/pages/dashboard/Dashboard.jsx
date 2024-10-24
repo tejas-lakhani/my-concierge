@@ -4,7 +4,7 @@ import React from "react";
 const Dashboard = () => {
   return (
     <div>
-      <Typography sx={{ marginBottom: 2 }}> Welcome to Dashboard</Typography>
+      <Typography sx={{ marginBottom: 2 }}> Welcome to Dashboard!</Typography>
     </div>
   );
 };

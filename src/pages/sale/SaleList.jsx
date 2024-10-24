@@ -11,10 +11,8 @@ import { Box, Button } from "@mui/material";
 import profileImage from "../../assets/icons/profileImage.svg";
 import useWindowWidth from "../../customHooks/useWindowWidth";
 import TableLayoutBox from "../../components/common/TableLayoutBox";
-import { useNavigate } from "react-router-dom";
 
-const Category = () => {
-  const navigate = useNavigate();
+const SaleList = () => {
   const windowWidth = useWindowWidth();
   const [entries, setEntries] = useState(10);
   const [searchTerm, setSearchTerm] = useState("");
@@ -40,7 +38,7 @@ const Category = () => {
   return (
     <div className="bg-white p-4">
       <div className="flex justify-between items-center mb-4">
-        <h1 className="text-2xl font-semibold">Main Category</h1>
+        <h1 className="text-2xl font-semibold">Sale List</h1>
       </div>
       <div className="flex justify-between md:items-center mb-4 max-md:flex-col">
         <div className="flex items-center space-x-2 max-md:mb-4">
@@ -54,19 +52,6 @@ const Category = () => {
 
         <div className="flex gap-5 justify-between items-center flex-wrap">
           <SearchBar onSearch={handleSearch} />
-          <Button
-            variant="contained"
-            sx={{
-              background:
-                " linear-gradient(95.02deg, #565C62 7.02%, #243040 95.7%)",
-              padding: "13px 25px",
-              borderRadius: "25px",
-              fontSize: { xs: "12px", sm: "13px" },
-            }}
-            onClick={() => navigate("/create-category")}
-          >
-            Add New Category
-          </Button>
         </div>
       </div>
 
@@ -161,4 +146,4 @@ const Category = () => {
   );
 };
 
-export default Category;
+export default SaleList;

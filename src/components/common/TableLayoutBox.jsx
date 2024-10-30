@@ -10,7 +10,7 @@ const TableLayoutBox = (props) => {
   return (
     <Box
       sx={{
-        width: { xs: `${windowWidth - 38}px`, lg: "auto" },
+        width: { xs: `${windowWidth - 49}px`, lg: "auto" },
         maxHeight: `${windowHeight - 330}px`,
         overflow: "auto",
       }}

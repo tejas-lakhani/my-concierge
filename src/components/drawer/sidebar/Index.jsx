@@ -91,7 +91,7 @@ export default function SidebarList() {
             <ListItemText primary="User List" />
           </ListItemButton>
         </List> */}
-         <List component="div" disablePadding>
+        <List component="div" disablePadding>
           <ListItemButton
             sx={{
               py: "5px",
@@ -346,18 +346,80 @@ export default function SidebarList() {
         <List component="div" disablePadding>
           <ListItemButton
             sx={{
-              py: "12px",
-              pl: 4,
+              py: "5px",
+              pl: 5,
               "&:hover": { color: "#D8942E" },
-              color: getTextColor("/settings/list"),
+              color: getTextColor("/setting"),
             }}
-            onClick={() => handleNavigation("/settings/list")} // Navigate on sub-item click
+            onClick={() => handleNavigation("/setting")} // Navigate on sub-item click
           >
-            <ListItemIcon sx={{ minWidth: "42px" }}>
-              <StarBorder />
+            <ListItemIcon sx={{ minWidth: "25px" }}>
+              <SidebarArrowIcon width={"12"} />
             </ListItemIcon>
-            <ListItemText primary="Settings List" />
+            <ListItemText
+              primary="General Setting"
+              sx={{ "& .MuiTypography-body1": { fontSize: "15px" } }}
+            />
           </ListItemButton>
+          <List component="div" disablePadding>
+            <ListItemButton
+              sx={{
+                py: "5px",
+                pl: 5,
+                "&:hover": { color: "#D8942E" },
+                color: getTextColor("/notification"),
+              }}
+              onClick={() => handleNavigation("/notification")} // Navigate on sub-item click
+            >
+              <ListItemIcon sx={{ minWidth: "25px" }}>
+                <SidebarArrowIcon width={"12"} />
+              </ListItemIcon>
+              <ListItemText
+                primary="Notification"
+                sx={{ "& .MuiTypography-body1": { fontSize: "15px" } }}
+              />
+            </ListItemButton>
+          </List>
+
+          <List component="div" disablePadding>
+            <ListItemButton
+              sx={{
+                py: "5px",
+                pl: 5,
+                "&:hover": { color: "#D8942E" },
+                color: getTextColor("/faq"),
+              }}
+              onClick={() => handleNavigation("/faq")} // Navigate on sub-item click
+            >
+              <ListItemIcon sx={{ minWidth: "25px" }}>
+                <SidebarArrowIcon width={"12"} />
+              </ListItemIcon>
+              <ListItemText
+                primary="FAQ"
+                sx={{ "& .MuiTypography-body1": { fontSize: "15px" } }}
+              />
+            </ListItemButton>
+          </List>
+
+          <List component="div" disablePadding>
+            <ListItemButton
+              sx={{
+                py: "5px",
+                pl: 5,
+                "&:hover": { color: "#D8942E" },
+                color: getTextColor("/profile"),
+              }}
+              onClick={() => handleNavigation("/profile")} // Navigate on sub-item click
+            >
+              <ListItemIcon sx={{ minWidth: "25px" }}>
+                <SidebarArrowIcon width={"12"} />
+              </ListItemIcon>
+              <ListItemText
+                primary="Profile"
+                sx={{ "& .MuiTypography-body1": { fontSize: "15px" } }}
+              />
+            </ListItemButton>
+          </List>
         </List>
       </Collapse>
     </List>

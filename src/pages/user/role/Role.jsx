@@ -1,16 +1,15 @@
-import React, { useState } from "react";
-import VisibilityIcon from "@mui/icons-material/Visibility";
-import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
-import { Box, Button } from "@mui/material";
+import EditIcon from "@mui/icons-material/Edit";
+import VisibilityIcon from "@mui/icons-material/Visibility";
+import React, { useState } from "react";
+import profileImage from "../../../assets/icons/profileImage.svg";
+import ActionButton from "../../../components/common/ActionButton";
+import CustomSwitch from "../../../components/common/CustomSwitch";
 import EntriesSelector from "../../../components/common/EntriesSelector";
+import Pagination from "../../../components/common/Pagination";
 import SearchBar from "../../../components/common/SearchBar";
 import TableLayoutBox from "../../../components/common/TableLayoutBox";
-import CustomSwitch from "../../../components/common/CustomSwitch";
-import ActionButton from "../../../components/common/ActionButton";
-import Pagination from "../../../components/common/Pagination";
 import useWindowWidth from "../../../customHooks/useWindowWidth";
-import profileImage from "../../../assets/icons/profileImage.svg";
 
 
 

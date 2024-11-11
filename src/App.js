@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import './App.css';
 import AppRoute from './routes';
 
@@ -6,20 +6,23 @@ import AppRoute from './routes';
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
 
-  const login = () => {
-    setIsAuthenticated(true);
-  };
+  const token = localStorage.getItem("token");
+  console.log("token", token, isAuthenticated)
 
-  const logout = () => {
-    setIsAuthenticated(false);
-  };
 
-  // console.log("gg");
-  
+  // useEffect(() => {
+  //   if (token) {
+  //     setIsAuthenticated(true)
+  //   } else {
+  //     setIsAuthenticated(false)
+  //   }
+  // }, [token])
+
+
 
   return (
     <div className="">
-       <AppRoute/>
+      <AppRoute  />
     </div>
   );
 }

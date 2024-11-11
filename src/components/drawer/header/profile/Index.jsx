@@ -7,6 +7,7 @@ import { ReactComponent as ProfileIcon } from "../../../../assets/icons/profileI
 import { ReactComponent as SettingIcon } from "../../../../assets/icons/settingIcon.svg";
 import { ReactComponent as SignOutIcon } from "../../../../assets/icons/signOutIcon.svg";
 import ProfilePic from "../../../../assets/images/profilePic.png";
+import { useNavigate } from "react-router-dom";
 
 const StyledMenu = styled((props) => (
   <Menu
@@ -53,12 +54,15 @@ const StyledMenu = styled((props) => (
 
 export default function Profile() {
   const [anchorEl, setAnchorEl] = React.useState(null);
+  const navigate = useNavigate();
   const open = Boolean(anchorEl);
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
   const handleClose = () => {
     setAnchorEl(null);
+    localStorage.removeItem("token")
+    navigate("/login")
   };
 
   return (

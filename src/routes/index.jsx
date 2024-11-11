@@ -1,5 +1,5 @@
-import React from "react";
-import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
+import React, { useEffect } from "react";
+import { Navigate, Route, BrowserRouter as Router, Routes } from "react-router-dom";
 import Login from "../pages/auth/login/Login";
 import Dashboard from "../pages/dashboard/Dashboard";
 import MainLayout from "../components/layout/MainLayout";
@@ -16,13 +16,18 @@ import PermissionList from "../pages/user/permissionList/PermissionList";
 import Role from "../pages/user/role/Role";
 
 const AppRoute = () => {
+  
+  const token  = localStorage.getItem("token");
+  console.log("token",token)
+
+  
   return (
     <Router>
       <Routes>
         <Route path="/login" element={<Login />} />
         <Route path="/forgotPassword" element={<ForgotPassword />} />
         <Route path="/resetPassword" element={<ResetPassword />} />
-        <Route path="/" element={<MainLayout />}>
+        <Route path="/" element={token ? <MainLayout /> : <Navigate to={"/login"} />}>
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/category" element={<Category />} />
           <Route path="/create-category" element={<CreateCategory />} />

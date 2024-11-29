@@ -11,16 +11,17 @@ const DrawerHeader = styled("div")(({ theme }) => ({
 }));
 
 const MainLayout = () => {
-  //   const { screenWidth, mobileWidth } = useContext(ScreenSizeContext);
-
   const { pathname } = useLocation();
+  const token = localStorage.getItem("token"); // Get token from localStorage
 
-  //   if (screenWidth <= mobileWidth) {
-  //     return <Navigate to={"/mobile-view"} state={pathname} />;
-  //   }
+  // If token exists and user is on the root path, redirect to /category
+  if (token && pathname === "/") {
+    return <Navigate to={"/category"} />;
+  }
 
-  if (pathname === "/") {
-    return <Navigate to={"/dashboard"} />;
+  // If no token exists, redirect to /login regardless of the path
+  if (!token) {
+    return <Navigate to={"/login"} />;
   }
 
   return (

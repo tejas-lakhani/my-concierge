@@ -61,8 +61,6 @@ export default function Profile() {
   };
   const handleClose = () => {
     setAnchorEl(null);
-    localStorage.removeItem("token")
-    navigate("/login")
   };
 
   return (
@@ -99,7 +97,10 @@ export default function Profile() {
         onClose={handleClose}
       >
         <MenuItem
-          onClick={handleClose}
+          onClick={() => {
+            setAnchorEl(null);
+            navigate("/profile");
+          }}
           disableRipple
           className="gap-[10px]"
           sx={{
@@ -133,7 +134,11 @@ export default function Profile() {
         </MenuItem>
 
         <MenuItem
-          onClick={handleClose}
+          onClick={() => {
+            setAnchorEl(null);
+            localStorage.removeItem("token");
+            navigate("/login");
+          }}
           disableRipple
           className="gap-[10px]"
           sx={{

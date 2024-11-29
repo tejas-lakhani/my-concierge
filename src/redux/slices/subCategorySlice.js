@@ -2,10 +2,10 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axiosInstance from "../../axiosInstance";
 
 // Async thunk for fetching categories
-export const fetchCategories = createAsyncThunk(
-  "categories/fetchCategories",
+export const fetchSubCategories = createAsyncThunk(
+  "categories/fetchSubCategories",
   async ({ page, records_per_page, search }) => {
-    const response = await axiosInstance.get("/category/", {
+    const response = await axiosInstance.get("/subcategory/", {
       params: {
         page,
         records_per_page,
@@ -17,20 +17,20 @@ export const fetchCategories = createAsyncThunk(
 );
 
 // Async thunk for creating a category
-export const createCategory = createAsyncThunk(
-  "categories/createCategory",
+export const createSubCategory = createAsyncThunk(
+  "categories/createSubCategory",
   async (categoryData) => {
-    const response = await axiosInstance.post("/category/", categoryData);
+    const response = await axiosInstance.post("/subcategory/", categoryData);
     return response.data.payload;
   }
 );
 
 // Async thunk for updating a category
-export const updateCategory = createAsyncThunk(
-  "categories/updateCategory",
+export const updateSubCategory = createAsyncThunk(
+  "categories/updateSubCategory",
   async (categoryData) => {
     const response = await axiosInstance.put(
-      `/category/?uuid=${categoryData?.uuid}`,
+      `/subcategory/?uuid=${categoryData?.uuid}`,
       categoryData
     );
     return response.data.payload;
@@ -38,17 +38,17 @@ export const updateCategory = createAsyncThunk(
 );
 
 // Async thunk for deleting a category
-export const deleteCategory = createAsyncThunk(
-  "categories/deleteCategory",
+export const deleteSubCategory = createAsyncThunk(
+  "categories/deleteSubCategory",
   async (id) => {
-    await axiosInstance.delete(`/category/?uuid=${id}`);
+    await axiosInstance.delete(`/subcategory/?uuid=${id}`);
     return id;
   }
 );
 
 // Slice and the rest of the code remain the same
-const categorySlice = createSlice({
-  name: "categories",
+const subCategorySlice = createSlice({
+  name: "subCategories",
   initialState: {
     data: [],
     pagination: [],
@@ -59,7 +59,7 @@ const categorySlice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     builder
-      .addCase(fetchCategories.pending, (state) => {
+      .addCase(fetchSubCategories.pending, (state) => {
         if (state.data.length > 0) {
           state.loading = false;
           state.noData = false;
@@ -68,34 +68,34 @@ const categorySlice = createSlice({
           state.noData = false;
         }
       })
-      .addCase(fetchCategories.fulfilled, (state, action) => {
+      .addCase(fetchSubCategories.fulfilled, (state, action) => {
         state.loading = false;
         state.data = action.payload.payload.data;
         state.pagination = action.payload.pager;
         state.noData = action.payload.payload.data.length === 0;
       })
-      .addCase(fetchCategories.rejected, (state, action) => {
+      .addCase(fetchSubCategories.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error.message;
         state.noData = true;
       })
-      .addCase(deleteCategory.fulfilled, (state, action) => {
+      .addCase(deleteSubCategory.fulfilled, (state, action) => {
         state.data = state.data.filter(
           (category) => category.uuid !== action.payload
         );
       })
-      .addCase(deleteCategory.rejected, (state, action) => {
+      .addCase(deleteSubCategory.rejected, (state, action) => {
         state.error = action.error.message;
       });
   },
 });
 
 // Selectors
-export const selectCategories = (state) => state.categories.data;
-export const selectCategoriesPagination = (state) =>
-  state.categories.pagination;
-export const selectLoading = (state) => state.categories.loading;
-export const selectError = (state) => state.categories.error;
-export const selectNoData = (state) => state.categories.noData;
+export const selectSubCategories = (state) => state.subCategories.data;
+export const selectSubCategoriesPagination = (state) =>
+  state.subCategories.pagination;
+export const selectLoading = (state) => state.subCategories.loading;
+export const selectError = (state) => state.subCategories.error;
+export const selectNoData = (state) => state.subCategories.noData;
 
-export default categorySlice.reducer;
+export default subCategorySlice.reducer;

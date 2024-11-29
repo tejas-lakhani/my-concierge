@@ -17,6 +17,7 @@ import {
   selectCategories,
   selectLoading,
   selectNoData,
+  selectCategoriesPagination,
 } from "../../redux/slices/categorySlice";
 import DeleteCategory from "./DeleteCategory";
 
@@ -24,16 +25,21 @@ const Category = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const categories = useSelector(selectCategories);
+  const categoriesPagination = useSelector(selectCategoriesPagination);
   const loading = useSelector(selectLoading);
   const noData = useSelector(selectNoData);
-  console.log("noData: ", noData);
+
   const [entries, setEntries] = useState(10);
   const [searchTerm, setSearchTerm] = useState("");
-  const [checked, setChecked] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
+
+  const totalPages = Math.ceil(
+    categoriesPagination.total_records / categoriesPagination.records_per_page
+  );
 
   const handleEntriesChange = (event) => {
     setEntries(event.target.value);
+    setCurrentPage(1); // Reset to page 1 on changing entries per page
   };
 
   const handleSearch = (term) => {
@@ -45,8 +51,14 @@ const Category = () => {
   };
 
   useEffect(() => {
-    dispatch(fetchCategories());
-  }, [dispatch]);
+    dispatch(
+      fetchCategories({
+        page: currentPage,
+        records_per_page: entries,
+        search: searchTerm,
+      })
+    );
+  }, [dispatch, currentPage, entries, searchTerm]);
 
   return (
     <div className="bg-white p-4">
@@ -69,12 +81,12 @@ const Category = () => {
             variant="contained"
             sx={{
               background:
-                " linear-gradient(95.02deg, #565C62 7.02%, #243040 95.7%)",
+                "linear-gradient(95.02deg, #565C62 7.02%, #243040 95.7%)",
               padding: "13px 25px",
               borderRadius: "25px",
               fontSize: { xs: "12px", sm: "13px" },
             }}
-            onClick={() => navigate("/create-category")}
+            onClick={() => navigate("/category/create")}
           >
             Add New Category
           </Button>
@@ -82,14 +94,14 @@ const Category = () => {
       </div>
 
       <TableLayoutBox>
-        <table className="w-full bg-white rounded-[8px] ">
+        <table className="w-full bg-white rounded-[8px]">
           <thead className="bg-[#F6F6F6] border border-[#F6F6F6]">
             <tr>
               {/* <th className="py-[15px] px-4 text-[#454545] font-medium">
                 Profile
               </th> */}
               <th className="py-[15px] px-4 text-[#454545] font-medium">
-                Sort
+                Sequence
               </th>
               <th className="py-[15px] px-4 text-[#454545] font-medium">
                 Name
@@ -114,16 +126,19 @@ const Category = () => {
                 <td className="py-2 border-[1px] border-[#D0D0D0]  px-4 border-b text-center">
                   {item.sequence}
                 </td>
-                <td className="py-2 border-[1px] border-[#D0D0D0] min-w-[200px]  px-4 border-b">
+                {/* <td className="py-2 border-[1px] border-[#D0D0D0] px-4 border-b text-center">
+                  {index + 1}
+                </td> */}
+                <td className="py-2 border-[1px] border-[#D0D0D0] min-w-[200px] px-4 border-b text-center">
                   {item?.name}
                 </td>
-                <td className="py-2 min-w-[200px] border-[1px] border-[#D0D0D0]  px-4 border-b">
+                <td className="py-2 min-w-[200px] border-[1px] border-[#D0D0D0] px-4 border-b text-center">
                   {item?.description}
                 </td>
-                <td className="py-2 border-[1px] border-[#D0D0D0]  px-4 border-b text-center">
+                <td className="py-2 border-[1px] border-[#D0D0D0] px-4 border-b text-center">
                   <CustomSwitch checked={item?.is_active} />
                 </td>
-                <td className="py-2 border-[1px] border-[#D0D0D0]  px-4 border-b text-center">
+                <td className="py-2 border-[1px] border-[#D0D0D0] px-4 border-b text-center">
                   <div
                     style={{
                       display: "flex",
@@ -132,22 +147,19 @@ const Category = () => {
                       gap: "10px",
                     }}
                   >
-                    {/* View Button */}
                     <ActionButton
                       icon={<VisibilityIcon />}
                       label="View"
                       color="#3f3f3f"
                     />
-                    {/* Edit Button */}
                     <ActionButton
                       icon={<EditIcon />}
                       label="Edit"
                       color="#1976d2"
                       onClick={() =>
-                        navigate(`/edit-category`, { state: item })
+                        navigate(`/category/edit`, { state: item })
                       }
                     />
-                    {/* Delete Button */}
                     <DeleteCategory id={item?.uuid} />
                   </div>
                 </td>
@@ -156,14 +168,13 @@ const Category = () => {
           </tbody>
         </table>
         {noData && <NoData />}
-
         {loading && <CircularIndeterminate />}
       </TableLayoutBox>
 
       {!noData && !loading && (
         <Pagination
           currentPage={currentPage}
-          totalPages={3} // Example total pages
+          totalPages={totalPages}
           onPageChange={handlePageChange}
         />
       )}

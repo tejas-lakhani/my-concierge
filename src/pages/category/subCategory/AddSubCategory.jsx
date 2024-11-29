@@ -1,57 +1,61 @@
+import React, { useState } from "react";
 import {
   Box,
   Button,
   Card,
   CardContent,
-  FormControlLabel,
   Grid,
   Typography,
 } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import useMediaQuery from "@mui/material/useMediaQuery";
-import React from "react";
-import CustomSwitch from "../../components/common/CustomSwitch";
 import { useDispatch } from "react-redux";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
-import { createCategory } from "../../redux/slices/categorySlice";
 import { useForm, Controller } from "react-hook-form";
+import { createSubCategory } from "../../../redux/slices/subCategorySlice";
+import SelectCategoryDialog from "./components/SelectCategoryDialog";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 
-const CreateCategory = () => {
+const CreateSubCategory = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
+  const [catIdName, setCatIdName] = useState("");
+
+  const [dialogOpen, setDialogOpen] = useState(false);
+
+  const handleOpenDialog = () => setDialogOpen(true);
 
   // Initialize React Hook Form
   const {
     handleSubmit,
     control,
+    setValue,
     formState: { errors },
   } = useForm({
     defaultValues: {
-      name: "testing",
-      sequence: "5",
-      description: "this is category description",
-      isActive: true,
+      name: "",
+      cat_id: "",
+      description: "",
     },
   });
 
   const onSubmit = async (data) => {
-    const { name, sequence, description } = data;
+    const { name, cat_id, description } = data;
 
     try {
       await dispatch(
-        createCategory({
+        createSubCategory({
           name,
-          sequence: parseInt(sequence),
+          category_id: cat_id,
           description,
-          is_active: data.isActive,
         })
       ).unwrap();
 
       toast.success("Category created successfully!");
-      navigate("/category");
+      navigate("/sub-category");
     } catch (error) {
       toast.error("Failed to create category. Please try again.");
     }
@@ -109,45 +113,39 @@ const CreateCategory = () => {
               )}
             </Grid>
 
-            {/* Sequence Input */}
+            {/* Category ID Input */}
             <Grid item xs={12} md={6}>
               <label className="block text-[17px] font-medium text-gray-700 pb-2">
-                Sequence<span className="text-red-500">*</span>
+                Category ID<span className="text-red-500">*</span>
               </label>
               <Controller
-                name="sequence"
+                name="cat_id"
                 control={control}
-                rules={{ required: "Sequence is required" }}
+                rules={{ required: "Category ID is required" }}
                 render={({ field }) => (
-                  <input
-                    {...field}
-                    type="number"
-                    className="mt-1 block w-full rounded-md p-3"
-                    placeholder="xyz"
-                    style={{ boxShadow: "0px 4px 8px 0px #00000026" }}
-                  />
+                  <div className="relative">
+                    <div
+                      className="mt-1 w-full rounded-md p-3 relative flex justify-between cursor-pointer"
+                      style={{ boxShadow: "0px 4px 8px 0px #00000026" }}
+                      onClick={handleOpenDialog}
+                    >
+                      <p>{catIdName ? catIdName : "Select Category"}</p>
+                      <ExpandMoreIcon />
+                    </div>
+                    <SelectCategoryDialog
+                      open={dialogOpen}
+                      setOpen={setDialogOpen}
+                      setCatId={(id) => {
+                        setValue("cat_id", id.id);
+                        setCatIdName(id.name);
+                      }}
+                    />
+                  </div>
                 )}
               />
-              {errors.sequence && (
-                <span className="text-red-500">{errors.sequence.message}</span>
+              {errors.cat_id && (
+                <span className="text-red-500">{errors.cat_id.message}</span>
               )}
-            </Grid>
-
-            {/* Switch for Visibility */}
-            <Grid item xs={12}>
-              <FormControlLabel
-                control={
-                  <Controller
-                    name="isActive"
-                    control={control}
-                    render={({ field }) => (
-                      <CustomSwitch {...field} checked={field.value} />
-                    )}
-                  />
-                }
-                label="Visible to customers"
-                sx={{ color: "#17263A", fontWeight: "500" }}
-              />
             </Grid>
 
             {/* Description */}
@@ -226,7 +224,7 @@ const CreateCategory = () => {
             textTransform: "unset",
           }}
           className="max-sm:w-full"
-          onClick={() => navigate("/category")}
+          onClick={() => navigate("/sub-category")}
         >
           Cancel
         </Button>
@@ -236,7 +234,7 @@ const CreateCategory = () => {
           variant="contained"
           sx={{
             background:
-              " linear-gradient(95.02deg, #565C62 7.02%, #243040 95.7%)",
+              "linear-gradient(95.02deg, #565C62 7.02%, #243040 95.7%)",
             boxShadow:
               "8px 8px 12.8px 0px #FFFFFF1A inset, -8px -8px 12.8px 0px #0000004D inset, 0px 3.46px 3.46px 0px #00000040 inset",
             padding: "7px 20px",
@@ -251,4 +249,4 @@ const CreateCategory = () => {
   );
 };
 
-export default CreateCategory;
+export default CreateSubCategory;

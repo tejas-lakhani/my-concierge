@@ -1,27 +1,26 @@
-import {
-  Box,
-  Button,
-  Card,
-  CardContent,
-  FormControlLabel,
-  Grid,
-  Typography,
-} from "@mui/material";
+import { Box, Button, Grid } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import useMediaQuery from "@mui/material/useMediaQuery";
-import React from "react";
-import CustomSwitch from "../../components/common/CustomSwitch";
-import { useDispatch } from "react-redux";
+import React, { useState } from "react";
+import { Controller, useForm } from "react-hook-form";
 import toast from "react-hot-toast";
-import { useNavigate } from "react-router-dom";
-import { createCategory } from "../../redux/slices/categorySlice";
-import { useForm, Controller } from "react-hook-form";
+import PhoneInput, {
+  formatPhoneNumber,
+  getCountryCallingCode,
+} from "react-phone-number-input";
+import "react-phone-number-input/style.css";
+import { useDispatch } from "react-redux";
+import { useLocation, useNavigate } from "react-router-dom";
+import { updateUser } from "../../../redux/slices/userSlice";
 
-const CreateCategory = () => {
+const EditUser = () => {
+  const location = useLocation();
+  const userData = location.state;
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
+  const [selectCountry, setSelectCountry] = useState("");
 
   // Initialize React Hook Form
   const {
@@ -30,30 +29,38 @@ const CreateCategory = () => {
     formState: { errors },
   } = useForm({
     defaultValues: {
-      name: "testing",
-      sequence: "5",
-      description: "this is category description",
-      isActive: true,
+      name: userData?.name,
+      email: userData?.email,
+      phone: userData?.dial + userData?.phone,
+      dial: userData?.dial,
+      role: userData?.role,
+      password: userData?.password,
     },
   });
 
   const onSubmit = async (data) => {
-    const { name, sequence, description } = data;
+    const { name, email, phone, role, password } = data;
+
+    const formatNumber = formatPhoneNumber(phone);
+    const dial = getCountryCallingCode(selectCountry);
 
     try {
       await dispatch(
-        createCategory({
+        updateUser({
           name,
-          sequence: parseInt(sequence),
-          description,
-          is_active: data.isActive,
+          email,
+          phone: formatNumber,
+          dial: `+${dial}`,
+          role,
+          password,
+          uuid: userData?.uuid,
         })
       ).unwrap();
 
-      toast.success("Category created successfully!");
-      navigate("/category");
+      toast.success("User updated successfully!"); // Updated success message
+      navigate("/admin-user"); // Assuming the user list page is /user
     } catch (error) {
-      toast.error("Failed to create category. Please try again.");
+      toast.error("Failed to update user. Please try again."); // Updated failure message
     }
   };
 
@@ -63,7 +70,8 @@ const CreateCategory = () => {
       onSubmit={handleSubmit(onSubmit)}
     >
       <div className="flex justify-between items-center mb-4">
-        <h1 className="text-2xl font-semibold">Create Category</h1>
+        <h1 className="text-2xl font-semibold">Edit User</h1>{" "}
+        {/* Changed to User */}
       </div>
       <Box
         display="flex"
@@ -99,7 +107,7 @@ const CreateCategory = () => {
                     {...field}
                     type="text"
                     className="mt-1 block w-full rounded-md p-3"
-                    placeholder="xtz"
+                    placeholder="Sahil"
                     style={{ boxShadow: "0px 4px 8px 0px #00000026" }}
                   />
                 )}
@@ -109,99 +117,82 @@ const CreateCategory = () => {
               )}
             </Grid>
 
-            {/* Sequence Input */}
+            {/* Email Input */}
             <Grid item xs={12} md={6}>
               <label className="block text-[17px] font-medium text-gray-700 pb-2">
-                Sequence<span className="text-red-500">*</span>
+                Email<span className="text-red-500">*</span>
               </label>
               <Controller
-                name="sequence"
+                name="email"
                 control={control}
-                rules={{ required: "Sequence is required" }}
+                rules={{ required: "Email is required" }}
                 render={({ field }) => (
                   <input
                     {...field}
-                    type="number"
+                    type="email"
                     className="mt-1 block w-full rounded-md p-3"
-                    placeholder="xyz"
+                    placeholder="sa@gmail.com"
                     style={{ boxShadow: "0px 4px 8px 0px #00000026" }}
                   />
                 )}
               />
-              {errors.sequence && (
-                <span className="text-red-500">{errors.sequence.message}</span>
+              {errors.email && (
+                <span className="text-red-500">{errors.email.message}</span>
               )}
             </Grid>
 
-            {/* Switch for Visibility */}
-            <Grid item xs={12}>
-              <FormControlLabel
-                control={
-                  <Controller
-                    name="isActive"
-                    control={control}
-                    render={({ field }) => (
-                      <CustomSwitch {...field} checked={field.value} />
-                    )}
-                  />
-                }
-                label="Visible to customers"
-                sx={{ color: "#17263A", fontWeight: "500" }}
-              />
-            </Grid>
-
-            {/* Description */}
-            <Grid item xs={12}>
+            {/* Phone Input */}
+            <Grid item xs={12} md={6}>
               <label className="block text-[17px] font-medium text-gray-700 pb-2">
-                Description<span className="text-red-500">*</span>
+                Phone<span className="text-red-500">*</span>
               </label>
               <Controller
-                name="description"
+                name="phone"
                 control={control}
-                rules={{ required: "Description is required" }}
+                rules={{ required: "Phone number is required" }}
                 render={({ field }) => (
-                  <textarea
+                  <PhoneInput
                     {...field}
+                    international
+                    defaultCountry="IN"
+                    countryCallingCodeEditable={false}
+                    className="mt-1 block w-full rounded-md p-3"
+                    placeholder="Enter phone number"
                     style={{ boxShadow: "0px 4px 8px 0px #00000026" }}
-                    className="w-full min-h-[200px] border-none focus:ring-0 p-3"
-                  ></textarea>
+                    onCountryChange={(v) => setSelectCountry(v)}
+                  />
                 )}
               />
-              {errors.description && (
-                <span className="text-red-500">
-                  {errors.description.message}
-                </span>
+              {errors.phone && (
+                <span className="text-red-500">{errors.phone.message}</span>
+              )}
+            </Grid>
+
+            {/* Role Input */}
+            <Grid item xs={12} md={6}>
+              <label className="block text-[17px] font-medium text-gray-700 pb-2">
+                Role<span className="text-red-500">*</span>
+              </label>
+              <Controller
+                name="role"
+                control={control}
+                rules={{ required: "Role is required" }}
+                render={({ field }) => (
+                  <input
+                    {...field}
+                    type="text"
+                    className="mt-1 block w-full rounded-md p-3"
+                    placeholder="user"
+                    style={{ boxShadow: "0px 4px 8px 0px #00000026" }}
+                  />
+                )}
+              />
+              {errors.role && (
+                <span className="text-red-500">{errors.role.message}</span>
               )}
             </Grid>
           </Grid>
         </Box>
-
-        {/* Right Section: Info Card */}
-        <Card
-          sx={{
-            width: isMobile ? "100%" : "300px",
-            marginTop: isMobile ? "20px" : "0",
-            boxShadow: "0px 4px 8px 0px #00000026",
-            height: "max-content",
-            borderRadius: "20px",
-          }}
-        >
-          <CardContent>
-            <Typography variant="body1" gutterBottom fontWeight={"500"}>
-              Created at
-            </Typography>
-            <Typography variant="body2" color="textSecondary">
-              -
-            </Typography>
-
-            <Typography variant="body1" mt={3} gutterBottom fontWeight={"500"}>
-              Last modified at
-            </Typography>
-            <Typography variant="body2" color="textSecondary">
-              -
-            </Typography>
-          </CardContent>
-        </Card>
       </Box>
 
       <Box
@@ -213,7 +204,7 @@ const CreateCategory = () => {
           mt: 4,
           gap: "20px",
         }}
-        className="max-sm:flex-col "
+        className="max-sm:flex-col"
       >
         <Button
           variant="contained"
@@ -226,7 +217,7 @@ const CreateCategory = () => {
             textTransform: "unset",
           }}
           className="max-sm:w-full"
-          onClick={() => navigate("/category")}
+          onClick={() => navigate("/admin-user")}
         >
           Cancel
         </Button>
@@ -244,11 +235,11 @@ const CreateCategory = () => {
           }}
           className="max-sm:w-full"
         >
-          Create Category
+          Update User
         </Button>
       </Box>
     </form>
   );
 };
 
-export default CreateCategory;
+export default EditUser;

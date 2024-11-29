@@ -1,59 +1,48 @@
-import {
-  Box,
-  Button,
-  Card,
-  CardContent,
-  FormControlLabel,
-  Grid,
-  Typography,
-} from "@mui/material";
+import { Box, Button, FormControlLabel, Grid } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import React from "react";
-import CustomSwitch from "../../components/common/CustomSwitch";
-import { useDispatch } from "react-redux";
+import { Controller, useForm } from "react-hook-form";
 import toast from "react-hot-toast";
+import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { createCategory } from "../../redux/slices/categorySlice";
-import { useForm, Controller } from "react-hook-form";
+import CustomSwitch from "../../../components/common/CustomSwitch";
+import { createFaq } from "../../../redux/slices/settingSlice/faqSlice";
 
-const CreateCategory = () => {
+const CreateFaq = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
 
-  // Initialize React Hook Form
   const {
     handleSubmit,
     control,
     formState: { errors },
   } = useForm({
     defaultValues: {
-      name: "testing",
-      sequence: "5",
-      description: "this is category description",
+      question: "",
+      answer: "",
       isActive: true,
     },
   });
 
   const onSubmit = async (data) => {
-    const { name, sequence, description } = data;
+    const { question, answer } = data;
 
     try {
       await dispatch(
-        createCategory({
-          name,
-          sequence: parseInt(sequence),
-          description,
+        createFaq({
+          question,
+          answer,
           is_active: data.isActive,
         })
       ).unwrap();
 
-      toast.success("Category created successfully!");
-      navigate("/category");
+      toast.success("Faq created successfully!");
+      navigate("/faq");
     } catch (error) {
-      toast.error("Failed to create category. Please try again.");
+      toast.error("Failed to create Faq. Please try again.");
     }
   };
 
@@ -63,7 +52,7 @@ const CreateCategory = () => {
       onSubmit={handleSubmit(onSubmit)}
     >
       <div className="flex justify-between items-center mb-4">
-        <h1 className="text-2xl font-semibold">Create Category</h1>
+        <h1 className="text-2xl font-semibold">Create Faqs</h1>
       </div>
       <Box
         display="flex"
@@ -86,14 +75,14 @@ const CreateCategory = () => {
         >
           <Grid container spacing={2}>
             {/* Name Input */}
-            <Grid item xs={12} md={6}>
+            <Grid item xs={12} md={12}>
               <label className="block text-[17px] font-medium text-gray-700 pb-2">
-                Name<span className="text-red-500">*</span>
+                Question<span className="text-red-500">*</span>
               </label>
               <Controller
-                name="name"
+                name="question"
                 control={control}
-                rules={{ required: "Name is required" }}
+                rules={{ required: "Question is required" }}
                 render={({ field }) => (
                   <input
                     {...field}
@@ -104,32 +93,8 @@ const CreateCategory = () => {
                   />
                 )}
               />
-              {errors.name && (
-                <span className="text-red-500">{errors.name.message}</span>
-              )}
-            </Grid>
-
-            {/* Sequence Input */}
-            <Grid item xs={12} md={6}>
-              <label className="block text-[17px] font-medium text-gray-700 pb-2">
-                Sequence<span className="text-red-500">*</span>
-              </label>
-              <Controller
-                name="sequence"
-                control={control}
-                rules={{ required: "Sequence is required" }}
-                render={({ field }) => (
-                  <input
-                    {...field}
-                    type="number"
-                    className="mt-1 block w-full rounded-md p-3"
-                    placeholder="xyz"
-                    style={{ boxShadow: "0px 4px 8px 0px #00000026" }}
-                  />
-                )}
-              />
-              {errors.sequence && (
-                <span className="text-red-500">{errors.sequence.message}</span>
+              {errors.question && (
+                <span className="text-red-500">{errors.question.message}</span>
               )}
             </Grid>
 
@@ -153,12 +118,12 @@ const CreateCategory = () => {
             {/* Description */}
             <Grid item xs={12}>
               <label className="block text-[17px] font-medium text-gray-700 pb-2">
-                Description<span className="text-red-500">*</span>
+                Answer<span className="text-red-500">*</span>
               </label>
               <Controller
-                name="description"
+                name="answer"
                 control={control}
-                rules={{ required: "Description is required" }}
+                rules={{ required: "Answer is required" }}
                 render={({ field }) => (
                   <textarea
                     {...field}
@@ -167,41 +132,12 @@ const CreateCategory = () => {
                   ></textarea>
                 )}
               />
-              {errors.description && (
-                <span className="text-red-500">
-                  {errors.description.message}
-                </span>
+              {errors.answer && (
+                <span className="text-red-500">{errors.answer.message}</span>
               )}
             </Grid>
           </Grid>
         </Box>
-
-        {/* Right Section: Info Card */}
-        <Card
-          sx={{
-            width: isMobile ? "100%" : "300px",
-            marginTop: isMobile ? "20px" : "0",
-            boxShadow: "0px 4px 8px 0px #00000026",
-            height: "max-content",
-            borderRadius: "20px",
-          }}
-        >
-          <CardContent>
-            <Typography variant="body1" gutterBottom fontWeight={"500"}>
-              Created at
-            </Typography>
-            <Typography variant="body2" color="textSecondary">
-              -
-            </Typography>
-
-            <Typography variant="body1" mt={3} gutterBottom fontWeight={"500"}>
-              Last modified at
-            </Typography>
-            <Typography variant="body2" color="textSecondary">
-              -
-            </Typography>
-          </CardContent>
-        </Card>
       </Box>
 
       <Box
@@ -226,7 +162,7 @@ const CreateCategory = () => {
             textTransform: "unset",
           }}
           className="max-sm:w-full"
-          onClick={() => navigate("/category")}
+          onClick={() => navigate("/faq")}
         >
           Cancel
         </Button>
@@ -244,11 +180,11 @@ const CreateCategory = () => {
           }}
           className="max-sm:w-full"
         >
-          Create Category
+          Create Faq
         </Button>
       </Box>
     </form>
   );
 };
 
-export default CreateCategory;
+export default CreateFaq;

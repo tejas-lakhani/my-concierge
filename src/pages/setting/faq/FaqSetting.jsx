@@ -1,28 +1,47 @@
-import React, { useState } from "react";
+import EditIcon from "@mui/icons-material/Edit";
+import VisibilityIcon from "@mui/icons-material/Visibility";
+import { Button } from "@mui/material";
+import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import ActionButton from "../../../components/common/ActionButton";
 import CustomSwitch from "../../../components/common/CustomSwitch";
 import EntriesSelector from "../../../components/common/EntriesSelector";
 import Pagination from "../../../components/common/Pagination";
 import SearchBar from "../../../components/common/SearchBar";
 import TableLayoutBox from "../../../components/common/TableLayoutBox";
-import ActionButton from "../../../components/common/ActionButton";
-import DeleteIcon from "@mui/icons-material/Delete";
-import EditIcon from "@mui/icons-material/Edit";
-import VisibilityIcon from "@mui/icons-material/Visibility";
+import {
+  fetchFaqs,
+  selectFaqLoading,
+  selectFaqNoData,
+  selectFaqPagination,
+  selectFaqs,
+} from "../../../redux/slices/settingSlice/faqSlice";
+import DeleteFaq from "./DeleteFaq";
+import NoData from "../../../components/common/NoData";
+import CircularIndeterminate from "../../../components/common/CircularIndeterminate";
 
 const FaqSetting = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const data = useSelector(selectFaqs);
+  const faqPagination = useSelector(selectFaqPagination);
+  const loading = useSelector(selectFaqLoading);
+  const noData = useSelector(selectFaqNoData);
+
+  console.log("data: ", data);
   const [entries, setEntries] = useState(10);
   const [searchTerm, setSearchTerm] = useState("");
   const [checked, setChecked] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
 
+  const totalPages = Math.ceil(
+    faqPagination.total_records / faqPagination.records_per_page
+  );
+
   const handleEntriesChange = (event) => {
     setEntries(event.target.value);
-  };
-
-  const handleChangeSwitch = () => {
-    setChecked((prev) => !prev);
+    setCurrentPage(1);
   };
 
   const handleSearch = (term) => {
@@ -32,6 +51,16 @@ const FaqSetting = () => {
   const handlePageChange = (page) => {
     setCurrentPage(page);
   };
+
+  useEffect(() => {
+    dispatch(
+      fetchFaqs({
+        page: currentPage,
+        records_per_page: entries,
+        search: searchTerm,
+      })
+    );
+  }, [dispatch, currentPage, entries, searchTerm]);
 
   return (
     <div className="bg-white p-4">
@@ -50,6 +79,20 @@ const FaqSetting = () => {
 
         <div className="flex gap-5 justify-between items-center flex-wrap">
           <SearchBar onSearch={handleSearch} />
+
+          <Button
+            variant="contained"
+            sx={{
+              background:
+                "linear-gradient(95.02deg, #565C62 7.02%, #243040 95.7%)",
+              padding: "13px 25px",
+              borderRadius: "25px",
+              fontSize: { xs: "12px", sm: "13px" },
+            }}
+            onClick={() => navigate("/faq/create")}
+          >
+            Add Faq
+          </Button>
         </div>
       </div>
 
@@ -69,21 +112,17 @@ const FaqSetting = () => {
             </tr>
           </thead>
           <tbody className="border">
-            {Array.from({ length: 9 }).map((_, index) => (
+            {data.map((item, index) => (
               <tr key={index}>
                 <td className="py-2 border-[1px] border-[#D0D0D0]  px-4 border-b text-center">
-                  Can I freeze my membership if I pay monthly?
+                  {item?.question}
                 </td>
                 <td className="py-2 border-[1px] border-[#D0D0D0] min-w-[200px]  px-4  text-center">
-                  No, we do not freeze memberships, it’s for the duration of 12
-                  straight months.
+                  {item?.answer}
                 </td>
 
                 <td className="py-2 border-[1px] border-[#D0D0D0]  px-4 border-b text-center">
-                  <CustomSwitch
-                    checked={checked}
-                    onChange={handleChangeSwitch}
-                  />
+                  <CustomSwitch checked={item?.is_active} />
                 </td>
 
                 <td className="py-2 border-[1px] border-[#D0D0D0]  px-4 border-b text-center">
@@ -107,27 +146,29 @@ const FaqSetting = () => {
                       icon={<EditIcon />}
                       label="Edit"
                       color="#1976d2"
+                      onClick={() => navigate("/faq/edit", { state: item })}
                     />
 
                     {/* Delete Button */}
-                    <ActionButton
-                      icon={<DeleteIcon />}
-                      label="Delete"
-                      color="#d32f2f"
-                    />
+                    <DeleteFaq id={item?.uuid} />
                   </div>
                 </td>
               </tr>
             ))}
           </tbody>
         </table>
+
+        {noData && <NoData />}
+        {loading && <CircularIndeterminate />}
       </TableLayoutBox>
 
-      <Pagination
-        currentPage={currentPage}
-        totalPages={3} // Example total pages
-        onPageChange={handlePageChange}
-      />
+      {!noData && !loading && (
+        <Pagination
+          currentPage={currentPage}
+          totalPages={totalPages}
+          onPageChange={handlePageChange}
+        />
+      )}
     </div>
   );
 };

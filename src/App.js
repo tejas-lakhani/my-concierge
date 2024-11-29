@@ -5,23 +5,7 @@ import { Toaster } from 'react-hot-toast';
 
 
 function App() {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-
-  const token = localStorage.getItem("token");
-  console.log("token", token, isAuthenticated)
-
-
-  // useEffect(() => {
-  //   if (token) {
-  //     setIsAuthenticated(true)
-  //   } else {
-  //     setIsAuthenticated(false)
-  //   }
-  // }, [token])
-
-
-
-  return (
+   return (
     <div className="">
        <AppRoute/>
        <Toaster

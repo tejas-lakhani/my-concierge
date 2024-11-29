@@ -251,7 +251,7 @@ export default function SidebarList() {
           <DropdownRightIcon color="grey" width="7" />
         )}
       </ListItemButton> */}
-      <Collapse in={open === "sales"} timeout="auto" unmountOnExit>
+      {/* <Collapse in={open === "sales"} timeout="auto" unmountOnExit>
         <List component="div" disablePadding>
           <ListItemButton
             sx={{
@@ -268,7 +268,7 @@ export default function SidebarList() {
             <ListItemText primary="Sales List" />
           </ListItemButton>
         </List>
-      </Collapse>
+      </Collapse> */}
 
       {/* Chat */}
       <ListItemButton
@@ -286,7 +286,7 @@ export default function SidebarList() {
       </ListItemButton>
 
       {/* Content */}
-      {/* <ListItemButton
+      <ListItemButton
         sx={{
           py: "12px",
           "&:hover": { color: "#D8942E" },
@@ -303,22 +303,65 @@ export default function SidebarList() {
         ) : (
           <DropdownRightIcon color="grey" width="7" />
         )}
-      </ListItemButton> */}
+      </ListItemButton>
       <Collapse in={open === "content"} timeout="auto" unmountOnExit>
         <List component="div" disablePadding>
           <ListItemButton
             sx={{
-              py: "12px",
-              pl: 4,
+              py: "5px",
+              pl: 5,
               "&:hover": { color: "#D8942E" },
-              color: getTextColor("/content/list"),
+              color: getTextColor("/terms-and-conditions"),
             }}
-            onClick={() => handleNavigation("/content/list")} // Navigate on sub-item click
+            onClick={() => handleNavigation("/terms-and-conditions")} // Navigate on sub-item click
           >
-            <ListItemIcon sx={{ minWidth: "42px" }}>
-              <StarBorder />
+            <ListItemIcon sx={{ minWidth: "25px" }}>
+              <SidebarArrowIcon width={"12"} />
             </ListItemIcon>
-            <ListItemText primary="Content List" />
+            <ListItemText
+              primary="Terms & Condition"
+              sx={{ "& .MuiTypography-body1": { fontSize: "15px" } }}
+            />
+          </ListItemButton>
+        </List>
+
+        <List component="div" disablePadding>
+          <ListItemButton
+            sx={{
+              py: "5px",
+              pl: 5,
+              "&:hover": { color: "#D8942E" },
+              color: getTextColor("/privacy-policy"),
+            }}
+            onClick={() => handleNavigation("/privacy-policy")} // Navigate on sub-item click
+          >
+            <ListItemIcon sx={{ minWidth: "25px" }}>
+              <SidebarArrowIcon width={"12"} />
+            </ListItemIcon>
+            <ListItemText
+              primary="Privacy Policy"
+              sx={{ "& .MuiTypography-body1": { fontSize: "15px" } }}
+            />
+          </ListItemButton>
+        </List>
+
+        <List component="div" disablePadding>
+          <ListItemButton
+            sx={{
+              py: "5px",
+              pl: 5,
+              "&:hover": { color: "#D8942E" },
+              color: getTextColor("/about-us"),
+            }}
+            onClick={() => handleNavigation("/about-us")} // Navigate on sub-item click
+          >
+            <ListItemIcon sx={{ minWidth: "25px" }}>
+              <SidebarArrowIcon width={"12"} />
+            </ListItemIcon>
+            <ListItemText
+              primary="About us"
+              sx={{ "& .MuiTypography-body1": { fontSize: "15px" } }}
+            />
           </ListItemButton>
         </List>
       </Collapse>

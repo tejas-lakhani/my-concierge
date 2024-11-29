@@ -20,9 +20,13 @@ const Pagination = ({ currentPage, totalPages, onPageChange }) => {
             "6.22px 6.22px 15px 0px #0000001A,-6.22px -6.22px 15px 0px #F9FCFF",
           padding: "7px 20px",
           color: "#454545",
+          cursor: currentPage === 1 ? "not-allowed" : "pointer",
         }}
-        onClick={() => onPageChange(currentPage - 1)}
-        disabled={currentPage === 1}
+        onClick={() => {
+          if (currentPage !== 1) {
+            onPageChange(currentPage - 1);
+          }
+        }}
       >
         Previous
       </Button>
@@ -39,9 +43,13 @@ const Pagination = ({ currentPage, totalPages, onPageChange }) => {
           boxShadow:
             "8px 8px 12.8px 0px #FFFFFF1A inset, -8px -8px 12.8px 0px #0000004D inset, 0px 3.46px 3.46px 0px #00000040 inset",
           padding: "7px 20px",
+          cursor: currentPage === totalPages ? "not-allowed" : "pointer",
         }}
-        onClick={() => onPageChange(currentPage + 1)}
-        disabled={currentPage === totalPages}
+        onClick={() => {
+          if (currentPage !== totalPages) {
+            onPageChange(currentPage + 1);
+          }
+        }}
       >
         Next
       </Button>

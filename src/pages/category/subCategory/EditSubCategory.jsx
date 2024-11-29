@@ -3,62 +3,63 @@ import {
   Button,
   Card,
   CardContent,
-  FormControlLabel,
   Grid,
   Typography,
 } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import useMediaQuery from "@mui/material/useMediaQuery";
-import React from "react";
-import CustomSwitch from "../../components/common/CustomSwitch";
-import { useDispatch } from "react-redux";
+import React, { useState } from "react";
+import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
+import { useDispatch } from "react-redux";
 import { useLocation, useNavigate } from "react-router-dom";
-import { updateCategory } from "../../redux/slices/categorySlice";
-import { useForm, Controller } from "react-hook-form";
+import { updateSubCategory } from "../../../redux/slices/subCategorySlice";
+import SelectCategoryDialog from "./components/SelectCategoryDialog";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 
-const EditCategory = () => {
+const EditSubCategory = () => {
   const location = useLocation();
-  const categoryData = location.state;
+  const subCategoryData = location.state;
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
+  const [catIdName, setCatIdName] = useState(
+    subCategoryData?.categoryDetaile?.name
+  );
+
+  const [dialogOpen, setDialogOpen] = useState(false);
+
+  const handleOpenDialog = () => setDialogOpen(true);
 
   // Initialize React Hook Form with default values
   const {
     register,
     handleSubmit,
     control,
+    setValue,
     formState: { errors },
   } = useForm({
     defaultValues: {
-      name: categoryData?.name || "",
-      sequence: categoryData?.sequence || "",
-      description: categoryData?.description || "",
-      isActive: categoryData?.is_active || false,
+      name: subCategoryData?.name || "",
+      cat_id: subCategoryData?.category_id || "",
+      description: subCategoryData?.description || "",
     },
   });
 
   const onSubmit = async (data) => {
-    if (!data.name || !data.sequence || !data.description) {
-      toast.error("All fields are required.");
-      return;
-    }
-
     try {
       await dispatch(
-        updateCategory({
-          uuid: categoryData.uuid,
+        updateSubCategory({
+          uuid: subCategoryData.uuid,
           name: data.name,
-          sequence: parseInt(data.sequence),
+          category_id: data.cat_id,
           description: data.description,
-          is_active: data.isActive,
         })
       ).unwrap();
 
       toast.success("Category updated successfully!");
-      navigate("/category");
+      navigate("/sub-category");
     } catch (error) {
       toast.error("Failed to update category. Please try again.");
     }
@@ -108,34 +109,31 @@ const EditCategory = () => {
             </Grid>
             <Grid item xs={12} md={6}>
               <label className="block text-[17px] font-medium text-gray-700 pb-2">
-                Sequence<span className="text-red-500">*</span>
+                Category<span className="text-red-500">*</span>
               </label>
-              <input
-                type="text"
-                {...register("sequence", { required: "Sequence is required" })}
-                className="mt-1 block w-full rounded-md p-3"
-                placeholder="Sequence"
-                style={{ boxShadow: "0px 4px 8px 0px #00000026" }}
-              />
+              <div className="relative">
+                <div
+                  className="mt-1 w-full rounded-md p-3 relative flex justify-between cursor-pointer"
+                  style={{ boxShadow: "0px 4px 8px 0px #00000026" }}
+                  onClick={handleOpenDialog}
+                >
+                  <p>{catIdName ? catIdName : "Select Category"}</p>
+                  <ExpandMoreIcon />
+                </div>
+                <SelectCategoryDialog
+                  open={dialogOpen}
+                  setOpen={setDialogOpen}
+                  setCatId={(id) => {
+                    setValue("cat_id", id.id);
+                    setCatIdName(id.name);
+                  }}
+                />
+              </div>
               {errors.sequence && (
                 <p className="text-red-500">{errors.sequence.message}</p>
               )}
             </Grid>
-            <Grid item xs={12}>
-              <FormControlLabel
-                control={
-                  <Controller
-                    name="isActive"
-                    control={control}
-                    render={({ field }) => (
-                      <CustomSwitch {...field} checked={field.value} />
-                    )}
-                  />
-                }
-                label="Visible to customers"
-                sx={{ color: "#17263A", fontWeight: "500" }}
-              />
-            </Grid>
+
             <Grid item xs={12}>
               <label className="block text-[17px] font-medium text-gray-700 pb-2">
                 Description<span className="text-red-500">*</span>
@@ -167,13 +165,13 @@ const EditCategory = () => {
               Created at
             </Typography>
             <Typography variant="body2" color="textSecondary">
-              {categoryData?.created_at || "-"}
+              {subCategoryData?.created_at || "-"}
             </Typography>
             <Typography variant="body1" mt={3} gutterBottom fontWeight={"500"}>
               Last modified at
             </Typography>
             <Typography variant="body2" color="textSecondary">
-              {categoryData?.last_modified_at || "-"}
+              {subCategoryData?.last_modified_at || "-"}
             </Typography>
           </CardContent>
         </Card>
@@ -198,7 +196,7 @@ const EditCategory = () => {
             color: "#454545",
             textTransform: "unset",
           }}
-          onClick={() => navigate("/category")}
+          onClick={() => navigate("/sub-category")}
         >
           Cancel
         </Button>
@@ -220,4 +218,4 @@ const EditCategory = () => {
   );
 };
 
-export default EditCategory;
+export default EditSubCategory;

@@ -1,30 +1,45 @@
-import React, { useState } from "react";
+import EditIcon from "@mui/icons-material/Edit";
+import VisibilityIcon from "@mui/icons-material/Visibility";
+import { Button } from "@mui/material";
+import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import ActionButton from "../../../components/common/ActionButton";
+import CircularIndeterminate from "../../../components/common/CircularIndeterminate";
+import CustomSwitch from "../../../components/common/CustomSwitch";
 import EntriesSelector from "../../../components/common/EntriesSelector";
+import NoData from "../../../components/common/NoData";
 import Pagination from "../../../components/common/Pagination";
 import SearchBar from "../../../components/common/SearchBar";
-import ActionButton from "../../../components/common/ActionButton";
-import CustomSwitch from "../../../components/common/CustomSwitch";
-import VisibilityIcon from "@mui/icons-material/Visibility";
-import EditIcon from "@mui/icons-material/Edit";
-import DeleteIcon from "@mui/icons-material/Delete";
-import { Box, Button } from "@mui/material";
-import profileImage from "../../../assets/icons/profileImage.svg";
-import useWindowWidth from "../../../customHooks/useWindowWidth";
 import TableLayoutBox from "../../../components/common/TableLayoutBox";
+import {
+  fetchSubCategories,
+  selectLoading,
+  selectNoData,
+  selectSubCategories,
+  selectSubCategoriesPagination,
+} from "../../../redux/slices/subCategorySlice";
+import DeleteSubCategory from "./DeleteSubCategory";
 
 const SubCategory = () => {
-  const windowWidth = useWindowWidth();
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const subCategories = useSelector(selectSubCategories);
+  const categoriesPagination = useSelector(selectSubCategoriesPagination);
+  const loading = useSelector(selectLoading);
+  const noData = useSelector(selectNoData);
+
   const [entries, setEntries] = useState(10);
   const [searchTerm, setSearchTerm] = useState("");
-  const [checked, setChecked] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
+
+  const totalPages = Math.ceil(
+    categoriesPagination.total_records / categoriesPagination.records_per_page
+  );
 
   const handleEntriesChange = (event) => {
     setEntries(event.target.value);
-  };
-
-  const handleChangeSwitch = () => {
-    setChecked((prev) => !prev);
+    setCurrentPage(1); // Reset to page 1 on changing entries per page
   };
 
   const handleSearch = (term) => {
@@ -34,6 +49,16 @@ const SubCategory = () => {
   const handlePageChange = (page) => {
     setCurrentPage(page);
   };
+
+  useEffect(() => {
+    dispatch(
+      fetchSubCategories({
+        page: currentPage,
+        records_per_page: entries,
+        search: searchTerm,
+      })
+    );
+  }, [dispatch, currentPage, entries, searchTerm]);
 
   return (
     <div className="bg-white p-4">
@@ -56,26 +81,27 @@ const SubCategory = () => {
             variant="contained"
             sx={{
               background:
-                " linear-gradient(95.02deg, #565C62 7.02%, #243040 95.7%)",
+                "linear-gradient(95.02deg, #565C62 7.02%, #243040 95.7%)",
               padding: "13px 25px",
               borderRadius: "25px",
               fontSize: { xs: "12px", sm: "13px" },
             }}
+            onClick={() => navigate("/sub-category/create")}
           >
-            Add New Category
+            Add New Sub Category
           </Button>
         </div>
       </div>
 
       <TableLayoutBox>
-        <table className="w-full bg-white rounded-[8px] ">
+        <table className="w-full bg-white rounded-[8px]">
           <thead className="bg-[#F6F6F6] border border-[#F6F6F6]">
             <tr>
-              <th className="py-[15px] px-4 text-[#454545] font-medium">
+              {/* <th className="py-[15px] px-4 text-[#454545] font-medium">
                 Profile
-              </th>
+              </th> */}
               <th className="py-[15px] px-4 text-[#454545] font-medium">
-                Sort
+                Sequence
               </th>
               <th className="py-[15px] px-4 text-[#454545] font-medium">
                 Name
@@ -83,43 +109,36 @@ const SubCategory = () => {
               <th className="py-[15px] px-4 text-[#454545] font-medium">
                 Description
               </th>
-              <th className="py-[15px] px-4 text-[#454545] font-medium">
-                Type
-              </th>
               <th className="py-2 px-4 text-[#454545] font-medium">Status</th>
               <th className="py-2 px-4 text-[#454545] font-medium">Action</th>
             </tr>
           </thead>
           <tbody className="border">
-            {Array.from({ length: 9 }).map((_, index) => (
+            {subCategories.map((item, index) => (
               <tr key={index}>
-                <td className="py-2 border-[1px] border-[#D0D0D0]  px-4 border-b text-center">
+                {/* <td className="py-2 border-[1px] border-[#D0D0D0]  px-4 border-b text-center">
                   <img
                     src={profileImage}
                     alt=""
                     className="bock mx-auto w-[40px]"
                   />
-                </td>
+                </td> */}
                 <td className="py-2 border-[1px] border-[#D0D0D0]  px-4 border-b text-center">
+                  {item.sequence}
+                </td>
+                {/* <td className="py-2 border-[1px] border-[#D0D0D0] px-4 border-b text-center">
                   {index + 1}
+                </td> */}
+                <td className="py-2 border-[1px] border-[#D0D0D0] min-w-[200px] px-4 border-b text-center">
+                  {item?.name}
                 </td>
-                <td className="py-2 border-[1px] border-[#D0D0D0] min-w-[200px]  px-4 border-b">
-                  You can check - FL shop
+                <td className="py-2 min-w-[200px] border-[1px] border-[#D0D0D0] px-4 border-b text-center">
+                  {item?.description}
                 </td>
-                <td className="py-2 min-w-[300px] border-[1px] border-[#D0D0D0]  px-4 border-b">
-                  Characterful 2 double bedroom house end of terrace immaculate
-                  condition great location 7.5% yield
+                <td className="py-2 border-[1px] border-[#D0D0D0] px-4 border-b text-center">
+                  <CustomSwitch checked={item?.is_active} />
                 </td>
-                <td className="py-2 border-[1px] border-[#D0D0D0]  px-4 border-b text-center">
-                  -
-                </td>
-                <td className="py-2 border-[1px] border-[#D0D0D0]  px-4 border-b text-center">
-                  <CustomSwitch
-                    checked={checked}
-                    onChange={handleChangeSwitch}
-                  />
-                </td>
-                <td className="py-2 border-[1px] border-[#D0D0D0]  px-4 border-b text-center">
+                <td className="py-2 border-[1px] border-[#D0D0D0] px-4 border-b text-center">
                   <div
                     style={{
                       display: "flex",
@@ -128,39 +147,37 @@ const SubCategory = () => {
                       gap: "10px",
                     }}
                   >
-                    {/* View Button */}
                     <ActionButton
                       icon={<VisibilityIcon />}
                       label="View"
                       color="#3f3f3f"
                     />
-
-                    {/* Edit Button */}
                     <ActionButton
                       icon={<EditIcon />}
                       label="Edit"
                       color="#1976d2"
+                      onClick={() =>
+                        navigate(`/sub-category/edit`, { state: item })
+                      }
                     />
-
-                    {/* Delete Button */}
-                    <ActionButton
-                      icon={<DeleteIcon />}
-                      label="Delete"
-                      color="#d32f2f"
-                    />
+                    <DeleteSubCategory id={item?.uuid} />
                   </div>
                 </td>
               </tr>
             ))}
           </tbody>
         </table>
+        {noData && <NoData />}
+        {loading && <CircularIndeterminate />}
       </TableLayoutBox>
 
-      <Pagination
-        currentPage={currentPage}
-        totalPages={3} // Example total pages
-        onPageChange={handlePageChange}
-      />
+      {!noData && !loading && (
+        <Pagination
+          currentPage={currentPage}
+          totalPages={totalPages}
+          onPageChange={handlePageChange}
+        />
+      )}
     </div>
   );
 };
